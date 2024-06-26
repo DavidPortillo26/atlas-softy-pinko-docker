@@ -1,0 +1,27 @@
+version: '3.9'  # Use the latest supported version of Docker Compose
+
+services:
+  back-end:
+    build:
+      context: ./back-end  # Path to backend Dockerfile and source code
+      dockerfile: Dockerfile  # Name of the Dockerfile for backend
+    image: softy-pinko-back-end:task4  # Custom image name and tag for backend
+
+  front-end:
+    build:
+      context: ./front-end  # Path to frontend Dockerfile and source code
+      dockerfile: Dockerfile  # Name of the Dockerfile for frontend
+    image: softy-pinko-front-end:task4  # Custom image name and tag for frontend
+    depends_on:
+      - back-end  # Ensure backend service is started before frontend
+
+  proxy:
+    build:
+      context: ./proxy  # Path to Nginx (proxy) Dockerfile and configuration
+      dockerfile: Dockerfile  # Name of the Dockerfile for Nginx (proxy)
+    image: softy-pinko-proxy:task5  # Custom image name and tag for Nginx (proxy)
+    ports:
+      - "80:80"  # Map port 80 on host to port 80 on Nginx container
+    depends_on:
+      - back-end  # Ensure backend service is started before proxy
+      - front-end  # Ensure frontend service is started before proxy
